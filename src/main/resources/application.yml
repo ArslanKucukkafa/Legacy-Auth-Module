@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: LaborMarketAuth
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: demo
+app:
+  jwt:
+    secret: LaborMarketIdmSecretKey
+    token:
+      validity: 86400000
