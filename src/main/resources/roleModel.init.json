@@ -1,0 +1,17 @@
+[
+  {
+    "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
+    "name": "\"MAHMUT\"",
+    "permissions": []
+  },
+  {
+    "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
+    "name": "\"ARSLAN\"",
+    "permissions": []
+  },
+  {
+    "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
+    "name": "\"KEREM\"",
+    "permissions": []
+  }
+]

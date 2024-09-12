@@ -11,3 +11,5 @@ app:
     secret: LaborMarketIdmSecretKey
     token:
       validity: 86400000
+  default:
+    role: ROLE_USER

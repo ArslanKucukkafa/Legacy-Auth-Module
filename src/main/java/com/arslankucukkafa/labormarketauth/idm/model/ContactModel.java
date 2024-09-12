@@ -1,24 +1,24 @@
 package com.arslankucukkafa.labormarketauth.idm.model;
 
+
+import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 public class ContactModel {
 
+        @Nullable
         private String email;
+        @Nullable
         private String phone;
-        private AddressModel addressModel;
 
         // arslan.kucukkafa: Belki kullanıcı kişisel web sitesini, sosyal medya hesaplarını, vb. ek bilgileri eklemek isteyebilir.
+
+        @Nullable
         private Map<String,String> additionalInfo;
-
-        public ContactModel(Map<String, String> additionalInfo) {
-            this.additionalInfo = additionalInfo;
-        }
-
-        public ContactModel(String email, String phone, AddressModel addressModel, Map<String, String> additionalInfo) {
+        public ContactModel(String email, String phone, Map<String, String> additionalInfo) {
             this.email = email;
             this.phone = phone;
-            this.addressModel = addressModel;
             this.additionalInfo = additionalInfo;
         }
 
@@ -30,20 +30,12 @@ public class ContactModel {
             return phone;
         }
 
-        public AddressModel getAddressModel() {
-            return addressModel;
-        }
-
         public void setEmail(String email) {
             this.email = email;
         }
 
         public void setPhone(String phone) {
             this.phone = phone;
-        }
-
-        public void setAddressModel(AddressModel addressModel) {
-            this.addressModel = addressModel;
         }
 
         public Map<String, String> getAdditionalInfo() {

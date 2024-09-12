@@ -18,3 +18,6 @@
 
 1. Toplu yetki kontrol sınırlamalarının yapılabilmesi. Örnegin NotificationController oldugunu farz edelim. Burdaki tüm Get request beklenen methodları check paket halinde kontrol edebiliriz
 2. Methoda özel bir kısıtmlama yapabiliriz. Örnegin NotificationController içindeki getNotification methodu için sadece admin yetkisi olması gerektiğini belirtebiliriz.
+
+## Fıkır-2
+* Adresses, Contact, Accounts, Billng gibi kısımların zorunlu olup olmaması opsiyonel olabilir.

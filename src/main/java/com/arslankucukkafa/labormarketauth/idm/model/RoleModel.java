@@ -31,5 +31,11 @@ public class RoleModel {
         this.name = name;
     }
 
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
 
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
 }

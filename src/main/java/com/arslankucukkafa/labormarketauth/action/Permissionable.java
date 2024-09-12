@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Permissionable {
-    PermissionType permissionType() default PermissionType.FOR_EVERYONE;
+    AccesserProfiles permissionType() default AccesserProfiles.ALL;
 }

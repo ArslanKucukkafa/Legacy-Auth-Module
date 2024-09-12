@@ -7,6 +7,8 @@ import com.arslankucukkafa.labormarketauth.idm.model.UserModel;
 import com.arslankucukkafa.labormarketauth.idm.repository.RoleRepository;
 import com.arslankucukkafa.labormarketauth.idm.repository.UserRepository;
 import com.arslankucukkafa.labormarketauth.idm.security.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -20,15 +22,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements UserDetailsService {
+
+    @Value("${app.default.role}")
+    private String defaultRole;
+
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    @Autowired
     private MongoTemplate mongoTemplate;
     private JwtService jwtService;
     public UserService() {}
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+
     @Override
     public UserModel loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userRepository.findUserModelById(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -52,10 +59,11 @@ public class UserService implements UserDetailsService {
         if (exists) {
             throw new RuntimeException("User already exists");
         }
-        var roleModel = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Role not found"));
-        userModel.setRole(roleModel);
-        userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
-        userRepository.save(userModel);
+        RoleModel defaultRoleModel = roleRepository.findByName(defaultRole).orElseThrow(() -> new RuntimeException("Default role not found"));
+        userModel.setRole(defaultRoleModel);
+
+        var a = userRepository.save(userModel);
+        a.getId();
     }
 
     public ResponseEntity<String> signIn(LoginDto loginDto) {

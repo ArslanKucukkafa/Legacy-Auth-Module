@@ -5,7 +5,7 @@ import com.arslankucukkafa.labormarketauth.idm.model.ContactModel;
 import com.arslankucukkafa.labormarketauth.idm.model.UserModel;
 
 public class RegisterDto {
-    private String nqme;
+    private String name;
     private String surname;
     private String username;
     private String birthDate;
@@ -13,8 +13,8 @@ public class RegisterDto {
     private AddressModel address;
 
 
-    public RegisterDto(String nqme, String surname, String username, String birthDate, ContactModel contact, AddressModel address) {
-        this.nqme = nqme;
+    public RegisterDto(String name, String surname, String username, String birthDate, ContactModel contact, AddressModel address) {
+        this.name = name;
         this.surname = surname;
         this.username = username;
         this.birthDate = birthDate;
@@ -27,7 +27,7 @@ public class RegisterDto {
 
     public UserModel toUserModel() {
         UserModel userModel = new UserModel();
-        userModel.setName(nqme);
+        userModel.setName(name);
         userModel.setSurname(surname);
         userModel.setUsername(username);
         userModel.setBirthDate(birthDate);
@@ -36,12 +36,12 @@ public class RegisterDto {
         return userModel;
     }
 
-    public String getNqme() {
-        return nqme;
+    public String getName() {
+        return name;
     }
 
-    public void setNqme(String nqme) {
-        this.nqme = nqme;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSurname() {

@@ -1,7 +1,6 @@
 package com.arslankucukkafa.labormarketauth.idm.controller;
 
 import com.arslankucukkafa.labormarketauth.action.MutualBeanScanner;
-import com.arslankucukkafa.labormarketauth.action.PermissionType;
 import com.arslankucukkafa.labormarketauth.action.Permissionable;
 import com.arslankucukkafa.labormarketauth.idm.model.DTO.LoginDto;
 import com.arslankucukkafa.labormarketauth.idm.model.DTO.RegisterDto;
@@ -17,7 +16,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@Permissionable(permissionType = PermissionType.FOR_EVERYONE)
+@Permissionable()
 public class AuthController {
     private final MutualBeanScanner mutualBeanScanner;
     private final UserService userService;
