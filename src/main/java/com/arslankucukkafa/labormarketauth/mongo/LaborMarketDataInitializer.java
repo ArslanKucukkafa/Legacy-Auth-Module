@@ -30,8 +30,10 @@ public class LaborMarketDataInitializer {
     @PostConstruct
     public void init() throws IOException {
 
-        var loader = new PathMatchingResourcePatternResolver();
+        mongoTemplate.dropCollection("roleModel");
 
+
+        var loader = new PathMatchingResourcePatternResolver();
         Resource [] resource = loader.getResources("classpath*:*.init.json");
 
         for (Resource res : resource) {
@@ -41,7 +43,7 @@ public class LaborMarketDataInitializer {
             try {
                 docs = objectMapper.readValue(res.getInputStream(), Document[].class);
             } catch (MismatchedInputException ex) {
-                LOGGER.error("Error while reading the file: " + res.getFilename() +"  not contains [] bracket or maybe is null ", ex);
+                LOGGER.error("Error while reading the file: " + res.getFilename() +"  not contains [] bracket or maybe is null ", ex.getMessage());
             }
             if (docs == null) {
                 LOGGER.warn("No data found in the file: " + res.getFilename());

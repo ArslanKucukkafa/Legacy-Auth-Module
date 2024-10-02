@@ -1,15 +1,12 @@
 package com.arslankucukkafa.labormarketauth.idm.controller;
 
-import com.arslankucukkafa.labormarketauth.action.Permissionable;
 import com.arslankucukkafa.labormarketauth.idm.model.RoleModel;
 import com.arslankucukkafa.labormarketauth.idm.repository.RoleRepository;
 import com.arslankucukkafa.labormarketauth.idm.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 
 @RestController
-@Permissionable
 @RequestMapping("/api/v1/role")
 public class RoleController {
 
@@ -27,7 +24,6 @@ public class RoleController {
     public void createRole(@RequestBody String roleName) {
         RoleModel roleModel = new RoleModel();
         roleModel.setName(roleName);
-        roleModel.setPermissions(Collections.emptyList());
         roleRepository.save(roleModel);
     }
 

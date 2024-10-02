@@ -3,13 +3,40 @@ spring:
     name: LaborMarketAuth
   data:
     mongodb:
-      host: localhost
-      port: 27017
       database: demo
+      uri: mongodb+srv://arslankucukkafa:mongoCloudPassword1@mongoDB.mongodb.net/?retryWrites=true&w=majority
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23liprguqYRDV72SXS
+            client-secret: be44ed2294203bfe80d1b97a8e9e4961972fc230
+            client-name: GitHub
+          google:
+            client-id: 171269310913-p870ahuhjim9ea7ltes1gk4u52nr0r66.apps.googleusercontent.com
+            client-secret: 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
+            client-name: Google
 app:
   jwt:
     secret: LaborMarketIdmSecretKey
     token:
       validity: 86400000
+    email:
+      verification:
+        validity: 86400000
+
   default:
     role: ROLE_USER
+
+oaouth:
+  providers:
+    github:
+      providerName: GitHub
+    google:
+      providerName: Google
+gg:
+  jte:
+    developmentMode: true
+    templateLocation: /src/main/resources/jte/templates
+

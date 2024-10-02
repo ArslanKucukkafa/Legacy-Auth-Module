@@ -3,26 +3,38 @@ package com.arslankucukkafa.labormarketauth.idm.model.DTO;
 import com.arslankucukkafa.labormarketauth.idm.model.AddressModel;
 import com.arslankucukkafa.labormarketauth.idm.model.ContactModel;
 import com.arslankucukkafa.labormarketauth.idm.model.UserModel;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
-public class RegisterDto {
+public class UserRegisterDto {
+    @NotNull
     private String name;
+    @NotNull
     private String surname;
+    @NotNull
     private String username;
+    @NotNull
+    private String password;
+    @NotNull
     private String birthDate;
+    @NotNull
+    private int version;
     private ContactModel contact;
     private AddressModel address;
 
 
-    public RegisterDto(String name, String surname, String username, String birthDate, ContactModel contact, AddressModel address) {
+    public UserRegisterDto(String name, String surname, String username, String password, String birthDate,int version, ContactModel contact, AddressModel address) {
         this.name = name;
         this.surname = surname;
         this.username = username;
+        this.password = password;
         this.birthDate = birthDate;
         this.contact = contact;
         this.address = address;
+        this.version = version;
     }
 
-    public RegisterDto() {
+    public UserRegisterDto() {
     }
 
     public UserModel toUserModel() {
@@ -30,7 +42,9 @@ public class RegisterDto {
         userModel.setName(name);
         userModel.setSurname(surname);
         userModel.setUsername(username);
+        userModel.setPassword(password);
         userModel.setBirthDate(birthDate);
+        userModel.setVersion(version);
         userModel.setContact(contact);
         userModel.setAddress(address);
         return userModel;
@@ -82,5 +96,21 @@ public class RegisterDto {
 
     public void setAddress(AddressModel address) {
         this.address = address;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

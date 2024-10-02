@@ -1,49 +1,50 @@
 package com.arslankucukkafa.labormarketauth.idm.controller;
 
-import com.arslankucukkafa.labormarketauth.action.MutualBeanScanner;
-import com.arslankucukkafa.labormarketauth.action.Permissionable;
-import com.arslankucukkafa.labormarketauth.idm.model.DTO.LoginDto;
-import com.arslankucukkafa.labormarketauth.idm.model.DTO.RegisterDto;
+import com.arslankucukkafa.labormarketauth.idm.model.DTO.UserLoginDto;
+import com.arslankucukkafa.labormarketauth.idm.model.DTO.UserRegisterDto;
 import com.arslankucukkafa.labormarketauth.idm.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-@RestController
+@Controller
 @RequestMapping("/api/v1/auth")
-@Permissionable()
 public class AuthController {
-    private final MutualBeanScanner mutualBeanScanner;
     private final UserService userService;
 
-    public AuthController(MutualBeanScanner mutualBeanScanner, UserService userService) {
-        this.mutualBeanScanner = mutualBeanScanner;
+    public AuthController(UserService userService) {
         this.userService = userService;
     }
 
 
-    @GetMapping("/hello")
+/*    @GetMapping("/hello")
     public ResponseEntity<Set> deıfjnk() {
         List<Class<? extends Annotation>> annotationTypes = new ArrayList<>();
         annotationTypes.add(RestController.class);
-        annotationTypes.add(Permissionable.class);
         var result = mutualBeanScanner.mutualAnnotationCluster(annotationTypes);
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+    }*/
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody RegisterDto registerDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity signup(@RequestBody UserRegisterDto registerDto) {
         userService.saveUser(registerDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+/*
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity login(@RequestBody UserLoginDto loginDto) {
         return userService.signIn(loginDto);
+    }
+*/
+
+    @GetMapping("/login")
+    public String home(Model model) {
+        model.addAttribute("name", "Arslan Kucukkafa");
+        return "login";
     }
 }
