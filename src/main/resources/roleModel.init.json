@@ -1,17 +1,26 @@
 [
   {
+    "_id": "role1",
     "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
     "name": "\"MAHMUT\"",
     "permissions": []
   },
   {
+    "_id": "role2",
     "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
     "name": "\"ARSLAN\"",
     "permissions": []
   },
   {
+    "_id": "role3",
     "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
-    "name": "\"KEREM\"",
+    "name": "KEREM",
+    "permissions": []
+  },
+  {
+    "_id": "role4",
+    "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
+    "name": "ROLE_USER",
     "permissions": []
   }
 ]

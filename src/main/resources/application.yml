@@ -1,15 +1,24 @@
 spring:
-  application:
-    name: LaborMarketAuth
   data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: demo
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:my-password}
+  mongodb:
+    uri: ${MONGODB_URI}
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+  mail:
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
 app:
   jwt:
-    secret: LaborMarketIdmSecretKey
-    token:
-      validity: 86400000
-  default:
-    role: ROLE_USER
+    secret: ${JWT_SECRET}

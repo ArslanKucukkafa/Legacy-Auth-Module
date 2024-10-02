@@ -1,11 +1,13 @@
 package com.arslankucukkafa.labormarketauth.idm.security;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,20 +24,15 @@ public class JwtService implements Serializable {
 
     public String generateToken(Authentication authentication){
         var role = authentication.getAuthorities();
-        return Jwts.builder().setSubject(authentication.getName()).setExpiration(
+        return Jwts.builder().subject(authentication.getName()).expiration(
                         new Date(System.currentTimeMillis()+1000*tokenValidty))
-                .setIssuer("Arslan19")
-                .setHeaderParam("role",role.stream().findFirst().get().toString())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .signWith(SignatureAlgorithm.HS256,secret).compact();
+                .issuer("604ef5b2eea6b60a8dc809bfe0fffacdb39218ac")
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .signWith(getSigningKey()).compact();
     }
 
     public String getUsernameFromToken(String token){
-        return Jwts.parser().setSigningKey(secret).build().parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public String getRoleNameFromToken(String token){
-        return Jwts.parser().setSigningKey(secret).build().parseClaimsJws(token).getHeader().get("role").toString();
+        return Jwts.parser().decryptWith(getSigningKey()).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean tokenValidate(String token){
@@ -45,5 +42,10 @@ public class JwtService implements Serializable {
             return true;
         }
         return false;
+    }
+
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

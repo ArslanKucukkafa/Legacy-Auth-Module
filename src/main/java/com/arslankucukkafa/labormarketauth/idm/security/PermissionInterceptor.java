@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+//
 @Component
 public class PermissionInterceptor implements HandlerInterceptor {
 
@@ -17,5 +19,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         }
         return true;
     }
+
+    
 
 }

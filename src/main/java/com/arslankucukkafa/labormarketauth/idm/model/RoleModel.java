@@ -1,20 +1,14 @@
 package com.arslankucukkafa.labormarketauth.idm.model;
 
-import com.arslankucukkafa.labormarketauth.action.Permission;
-import com.arslankucukkafa.labormarketauth.action.Permissionable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
 @Document
-@Permissionable
 public class RoleModel {
     @Id
     private String id;
     private String name;
-    private List<Permission> permissions;
-
+    private PermissonModel permisson;
     public String getId() {
         return id;
     }
@@ -31,11 +25,11 @@ public class RoleModel {
         this.name = name;
     }
 
-    public List<Permission> getPermissions() {
-        return permissions;
+    public PermissonModel getPermisson() {
+        return permisson;
     }
 
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
+    public void setPermisson(PermissonModel permisson) {
+        this.permisson = permisson;
     }
 }

@@ -1,7 +1,7 @@
 package com.arslankucukkafa.labormarketauth.idm.service;
 
-import com.arslankucukkafa.labormarketauth.idm.model.DTO.LoginDto;
-import com.arslankucukkafa.labormarketauth.idm.model.DTO.RegisterDto;
+import com.arslankucukkafa.labormarketauth.idm.model.DTO.UserLoginDto;
+import com.arslankucukkafa.labormarketauth.idm.model.DTO.UserRegisterDto;
 import com.arslankucukkafa.labormarketauth.idm.model.RoleModel;
 import com.arslankucukkafa.labormarketauth.idm.model.UserModel;
 import com.arslankucukkafa.labormarketauth.idm.repository.RoleRepository;
@@ -42,7 +42,13 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public void saveUser(RegisterDto userDTO) {
+//    public UserModel findUserByEmail(String email) throws UsernameNotFoundException {
+//        var user = userRepository.find().orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//        return user;
+//    }
+
+
+    public void saveUser(UserRegisterDto userDTO) {
         UserModel userModel = userDTO.toUserModel();
 
         Query query = new Query();
@@ -60,13 +66,12 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("User already exists");
         }
         RoleModel defaultRoleModel = roleRepository.findByName(defaultRole).orElseThrow(() -> new RuntimeException("Default role not found"));
-        userModel.setRole(defaultRoleModel);
-
+        userModel.getRole().add(defaultRoleModel);
         var a = userRepository.save(userModel);
         a.getId();
     }
 
-    public ResponseEntity<String> signIn(LoginDto loginDto) {
+    public ResponseEntity<String> signIn(UserLoginDto loginDto) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginDto.username(),loginDto.password());
         if(authentication.isAuthenticated()) {
             return ResponseEntity.badRequest().body("Invalid credentials");

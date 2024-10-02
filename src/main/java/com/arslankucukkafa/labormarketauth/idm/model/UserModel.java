@@ -1,6 +1,6 @@
 package com.arslankucukkafa.labormarketauth.idm.model;
 
-import com.arslankucukkafa.labormarketauth.action.Permissionable;
+import jakarta.annotation.Nullable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,28 +12,31 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Permissionable
 @Document
 public class UserModel implements UserDetails {
     @Id
     private String id;
     @Indexed(unique = true)
     private String username;
+    @Nullable
     private String password;
     private ContactModel contact;
     private AddressModel address;
     private String name;
     private String surname;
     private String birthDate;
-    private RoleModel role;
+    private List<RoleModel> role;
+    private int version;
     public String getUsername() {
         return username;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        RoleModel role = getRole();
+        List<RoleModel> role = getRole();
         List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+        for (RoleModel roleModel : role) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(roleModel.getName()));
+        }
         return grantedAuthorities;
     }
 
@@ -42,7 +45,7 @@ public class UserModel implements UserDetails {
         return null;
     }
 
-    public RoleModel getRole() {
+    public List<RoleModel> getRole() {
         return role;
     }
 
@@ -102,7 +105,15 @@ public class UserModel implements UserDetails {
         this.birthDate = birthDate;
     }
 
-    public void setRole(RoleModel role) {
+    public void setRole(List<RoleModel> role) {
         this.role = role;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
