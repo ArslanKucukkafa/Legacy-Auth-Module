@@ -1,6 +1,6 @@
 package com.arslankucukkafa.labormarketauth.idm.controller;
 
-import com.arslankucukkafa.labormarketauth.idm.permisson.EnpointScanner;
+import com.arslankucukkafa.labormarketauth.idm.permisson.EndpointScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class TestController  {
 
     @Autowired
-    EnpointScanner enpointScanner;
+    EndpointScanner enpointScanner;
 
     @GetMapping("/")
     public String index() {

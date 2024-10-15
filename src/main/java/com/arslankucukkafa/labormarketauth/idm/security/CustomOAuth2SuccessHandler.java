@@ -1,9 +1,22 @@
 package com.arslankucukkafa.labormarketauth.idm.security;
 
+import com.arslankucukkafa.labormarketauth.idm.model.DTO.JwtDto;
+import com.arslankucukkafa.labormarketauth.idm.model.UserModel;
+import com.arslankucukkafa.labormarketauth.idm.model.sync.GithubSyncer;
+import com.arslankucukkafa.labormarketauth.idm.model.sync.GoogleSyncer;
+import com.arslankucukkafa.labormarketauth.idm.model.sync.Syncer;
+import com.arslankucukkafa.labormarketauth.idm.model.sync.SyncerFactory;
+import com.arslankucukkafa.labormarketauth.idm.repository.UserRepository;
+import com.arslankucukkafa.labormarketauth.util.JwtService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -13,6 +26,21 @@ import java.io.IOException;
 @Component
 public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
+    @Value("${app.jwt.secret}")
+    private String secret;
+    @Value("${app.jwt.token.validity}")
+    private long tokenValidity;
+    private final Logger LOGGER = LoggerFactory.getLogger(CustomOAuth2SuccessHandler.class);
+    private final UserRepository userRepository;
+    private final SyncerFactory syncerFactory;
+    private final JwtService jwtService;
+
+    public CustomOAuth2SuccessHandler(UserRepository userRepository, SyncerFactory syncerFactory, JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.syncerFactory = syncerFactory;
+        this.jwtService = jwtService;
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -21,32 +49,30 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         // Authentication içerisinde kullanıcı bilgilerini alabilirsin
          OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        // Eğer kullanıcı Google ile giriş yapıyorsa (Google OIDC kullanıyor)
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_OIDC_USER"))) {
-            // Google OIDC kullanıcısı için yapılacak işlemler
-            handleGoogleLogin(oAuth2User);
-        }
-        // Eğer kullanıcı GitHub ile giriş yapıyorsa (OAuth2 kullanıyor)
-        else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_OAUTH2_USER"))) {
-            // GitHub OAuth2 kullanıcısı için yapılacak işlemler
-            handleGitHubLogin(oAuth2User);
-        }
+        var provider = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
+        Syncer syncer = syncerFactory.getSyncer(provider);
 
-        // Başarılı girişten sonra kullanıcıyı yönlendireceğin yer
-        response.sendRedirect("/home");
-    }
+         UserModel mappedUser = syncer.sync(oAuth2User);
+         LOGGER.trace("User is mapped: {}", mappedUser);
 
-    private void handleGoogleLogin(OAuth2User oAuth2User) {
-        // Google kullanıcı bilgilerini işleme
-        String email = oAuth2User.getAttribute("email");
-        System.out.println("Google ile giriş yapan kullanıcı: " + email);
-        // Veritabanına kaydetme, güncelleme, vb. işlemler
-    }
+         // Kullanıcıyı veritabanında ara
+         UserModel currentUser = userRepository.findUserModelByContactEmail(mappedUser.getContact().getEmail()).orElse(null);
 
-    private void handleGitHubLogin(OAuth2User oAuth2User) {
-        // GitHub kullanıcı bilgilerini işleme
-        String username = oAuth2User.getAttribute("login");
-        System.out.println("GitHub ile giriş yapan kullanıcı: " + username);
-        // Veritabanına kaydetme, güncelleme, vb. işlemler
+         // FIXME: Burda kullanıcı zaten güncellse update etmeme gerek yok ? check this condition
+         if (currentUser != null) {
+            currentUser = syncer.updateModel(currentUser, mappedUser);
+            userRepository.save(currentUser);
+            LOGGER.trace("User is updated: {}", currentUser);
+         }
+        else {
+            userRepository.save(mappedUser);
+            LOGGER.trace("User is saved: {}", mappedUser);
+         }
+
+        // token oluştur ve kullanıcıya geri dön
+        var authToken = jwtService.generateToken(mappedUser.getContact().getEmail(), secret, tokenValidity);
+        JwtDto jwtDto = new JwtDto(authToken);
+        response.setContentType("application/json");
+        new ObjectMapper().writeValue(response.getWriter(), jwtDto);
     }
 }

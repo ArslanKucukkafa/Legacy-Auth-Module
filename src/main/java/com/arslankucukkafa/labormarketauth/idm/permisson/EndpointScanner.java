@@ -12,13 +12,14 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class EnpointScanner implements ApplicationListener<ContextRefreshedEvent>{
+public class EndpointScanner implements ApplicationListener<ContextRefreshedEvent>{
 
-    private final Logger LOGGER = LoggerFactory.getLogger(EnpointScanner.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(EndpointScanner.class);
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -40,8 +41,7 @@ public class EnpointScanner implements ApplicationListener<ContextRefreshedEvent
         Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping
                 .getHandlerMethods();
         HashMap<RequestMethod, String> endpoints = new HashMap<>();
-        map.forEach((key, value) -> endpoints.put(
-                key.getMethodsCondition().getMethods().iterator().next(), key.getPathPatternsCondition().getDirectPaths().iterator().next()) );
+        map.forEach((key, value) -> endpoints.put(key.getMethodsCondition().getMethods().iterator().next(), key.getPathPatternsCondition().getDirectPaths().iterator().next()) );
         return endpoints;
     }
 }

@@ -1,9 +1,10 @@
 package com.arslankucukkafa.labormarketauth.idm.security;
 
 import com.arslankucukkafa.labormarketauth.idm.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,13 +13,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,8 +32,11 @@ import java.util.List;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
+@EnableAsync
 @EnableWebSecurity
 public class SecurityConfiguation {
+    @Autowired
+    private UserService userService;
     private final JwtFilter jwtFilter;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
@@ -62,7 +66,6 @@ public class SecurityConfiguation {
                         .requestMatchers("/api/v1/auth/login", "/oauth2/authorization/**", "/api/v1/auth/hello", "/api/v1/auth/signup").permitAll()  // login sayfasına ve OAuth URL'lerine izin ver
                         .anyRequest().authenticated()).oauth2Login(
                                 oauth2 ->oauth2.clientRegistrationRepository(clientRegistrationRepository())
-//                                .userInfoEndpoint(userInfo -> userInfo.userAuthoritiesMapper(new OauthGrantedAuthoritiesMapper()))
                                 .successHandler(customOAuth2SuccessHandler))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);  // JWT filtre ekleniyor
 
@@ -70,15 +73,16 @@ public class SecurityConfiguation {
     }
 
 
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(new UserService());
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(userService);
+        authProvider.setPasswordEncoder(encoder());
 
         return authProvider;
     }

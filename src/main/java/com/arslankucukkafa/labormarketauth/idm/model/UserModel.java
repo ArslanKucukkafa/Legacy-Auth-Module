@@ -20,13 +20,22 @@ public class UserModel implements UserDetails {
     private String username;
     @Nullable
     private String password;
+    @Nullable
     private ContactModel contact;
+    @Nullable
     private AddressModel address;
     private String name;
     private String surname;
     private String birthDate;
+    private boolean isAccountVerified;
     private List<RoleModel> role;
     private int version;
+    @Nullable
+    private String avatar_url;
+    @Nullable
+    private String github_url;
+
+
     public String getUsername() {
         return username;
     }
@@ -42,7 +51,7 @@ public class UserModel implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     public List<RoleModel> getRole() {
@@ -115,5 +124,29 @@ public class UserModel implements UserDetails {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public String getAvatar_url() {
+        return avatar_url;
+    }
+
+    public void setAvatar_url(String avatar_url) {
+        this.avatar_url = avatar_url;
+    }
+
+    public String getGithub_url() {
+        return github_url;
+    }
+
+    public void setGithub_url(String github_url) {
+        this.github_url = github_url;
+    }
+
+    public boolean getAccountVerified() {
+        return isAccountVerified;
+    }
+
+    public void setAccountVerified(boolean accountVerified) {
+        isAccountVerified = accountVerified;
     }
 }

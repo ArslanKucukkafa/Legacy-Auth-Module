@@ -1,0 +1,4 @@
+1-@Autowired ve Dependecy object nesneleri bir standarta baglanmalı.
+2-Component ve Service ayrımı net olmalı
+3-AccountVerified yapısı netleştirilmeli
+4-Two factor authentication yapısındaki jwt token yapısından emin degilim

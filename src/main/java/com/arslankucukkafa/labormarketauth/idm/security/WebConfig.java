@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.Map;
 
 @Configuration
+
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired

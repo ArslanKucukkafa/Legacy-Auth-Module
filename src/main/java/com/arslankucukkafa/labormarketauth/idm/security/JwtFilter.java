@@ -1,15 +1,16 @@
 package com.arslankucukkafa.labormarketauth.idm.security;
 
 import com.arslankucukkafa.labormarketauth.idm.service.UserService;
+import com.arslankucukkafa.labormarketauth.util.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,15 +18,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+// todo: refactor this class name because jwt filter is general name
 public class JwtFilter extends OncePerRequestFilter {
 
+    @Value("${app.jwt.secret}")
+    private String secret;
     private final JwtService jwtService;
 
-    private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
-    public JwtFilter(JwtService jwtService, UserService userDetailsService) {
+    public JwtFilter(JwtService jwtService, UserService userService) {
         this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
+        this.userService = userService;
     }
 
     @Override
@@ -38,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if(requestTokenHeader!=null&& requestTokenHeader.startsWith("Bearer")){
             jwtToken = requestTokenHeader.substring(7);
             try {
-                username = jwtService.getUsernameFromToken(jwtToken);
+                username = jwtService.getSubjectFromToken(secret,jwtToken);
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token!");
             } catch (ExpiredJwtException e) {
@@ -49,8 +53,8 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if (username != null && jwtToken!=null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtService.tokenValidate(jwtToken)) {
+            UserDetails userDetails = userService.loadUserByUsername(username);
+            if (jwtService.validateToken(secret,jwtToken)) {
                 System.out.println(jwtToken);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,
                         userDetails.getAuthorities());

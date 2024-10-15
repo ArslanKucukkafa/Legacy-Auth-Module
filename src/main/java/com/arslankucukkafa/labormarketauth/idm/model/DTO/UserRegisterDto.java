@@ -6,6 +6,8 @@ import com.arslankucukkafa.labormarketauth.idm.model.UserModel;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
+import java.util.ArrayList;
+
 public class UserRegisterDto {
     @NotNull
     private String name;
@@ -46,6 +48,8 @@ public class UserRegisterDto {
         userModel.setBirthDate(birthDate);
         userModel.setVersion(version);
         userModel.setContact(contact);
+        userModel.setRole(new ArrayList<>());
+        userModel.setAccountVerified(false);
         userModel.setAddress(address);
         return userModel;
     }

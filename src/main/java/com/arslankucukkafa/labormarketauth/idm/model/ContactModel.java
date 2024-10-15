@@ -21,8 +21,9 @@ public class ContactModel {
             this.phone = phone;
             this.additionalInfo = additionalInfo;
         }
+        public ContactModel() {}
 
-        public String getEmail() {
+    public String getEmail() {
             return email;
         }
 

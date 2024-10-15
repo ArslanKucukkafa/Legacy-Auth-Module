@@ -1,11 +1,17 @@
 spring:
+  application:
+    name: LaborMarketAuth
+    base-url: http://localhost:8080
   data:
     redis:
-      host: ${REDIS_HOST:127.0.0.1}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:my-password}
-  mongodb:
-    uri: ${MONGODB_URI}
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      database: ${REDIS_DATABASE}
+      timeout: ${REDIS_TIMEOUT}
+    mongodb:
+      database: demo
+      uri: ${MONGODB_URI}
   security:
     oauth2:
       client:
@@ -13,12 +19,42 @@ spring:
           github:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_CLIENT_SECRET}
+            client-name: GitHub
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+            client-name: Google
   mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 app:
   jwt:
     secret: ${JWT_SECRET}
+    token:
+      validity: 900
+    email:
+      register:
+        validity: 86400000
+        secret: ${REGISTER_EMAIL_SECRET}
+      login:
+        validity: 86400000
+        secret: ${LOGIN_EMAIL_SECRET}
+  default:
+    role: DEFAULT_ROLE
+  public:
+    role: PUBLIC_ROLE
+
+oaouth:
+  providers:
+    github:
+      providerName: GitHub
+    google:
+      providerName: Google

@@ -30,8 +30,8 @@ public class LaborMarketDataInitializer {
     @PostConstruct
     public void init() throws IOException {
 
-        mongoTemplate.dropCollection("roleModel");
-
+        // Drop all data from the database
+        mongoTemplate.getCollectionNames().forEach(mongoTemplate::dropCollection);
 
         var loader = new PathMatchingResourcePatternResolver();
         Resource [] resource = loader.getResources("classpath*:*.init.json");

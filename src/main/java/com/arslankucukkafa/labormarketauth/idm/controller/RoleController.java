@@ -1,80 +1,77 @@
 package com.arslankucukkafa.labormarketauth.idm.controller;
 
+import com.arslankucukkafa.labormarketauth.idm.model.PermissonModel;
 import com.arslankucukkafa.labormarketauth.idm.model.RoleModel;
+import com.arslankucukkafa.labormarketauth.idm.permisson.EndpointScanner;
 import com.arslankucukkafa.labormarketauth.idm.repository.RoleRepository;
-import com.arslankucukkafa.labormarketauth.idm.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+
+// arslan.kucukkafa: burada repository kullanılmış, bunu diger controller classları gibi servis üzerinden yapmak daha iyi olurdu
 
 @RestController
 @RequestMapping("/api/v1/role")
 public class RoleController {
 
+    private EndpointScanner endpointScanner;
     private final RoleRepository roleRepository;
 
-    private final UserRepository userRepository;
-
-    public RoleController(RoleRepository roleRepository, UserRepository userRepository) {
+    public RoleController(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
     }
 
 
-    @PostMapping
-    public void createRole(@RequestBody String roleName) {
+    @PostMapping("/create/{roleName}")
+    public void createRole(@PathVariable("roleName") String roleName) {
         RoleModel roleModel = new RoleModel();
         roleModel.setName(roleName);
         roleRepository.save(roleModel);
     }
 
- /*   // Yeni bir role oluşturur
-    @PostMapping
-    public void createRole() {
-        // create role
+    @GetMapping("/getAll}")
+    public List<RoleModel> getAllRoles() {
+        return roleRepository.findAll();
     }
 
-    // Parametre olarak verilen role'ü siler
-    @DeleteMapping
-    public void deleteRole() {
-        // delete role
+    @GetMapping("/get/{roleName}")
+    public RoleModel getRole(@PathVariable("roleName") String roleName) {
+        return roleRepository.findByName(roleName).orElse(null);
     }
 
-    // Parametre olarak verilen role'ü günceller
-    // arslan.kucukkafa : UpdateRole methodunda Actionlar ve Permissionlar ile ilgili güncelleme yapılabilir
-    @PostMapping
-    public void updateRole() {
-        // update role
+    @DeleteMapping("/delete/{roleName}")
+    public void deleteRole(@PathVariable("roleName") String roleName) {
+        RoleModel roleModel = roleRepository.findByName(roleName).orElse(null);
+        if (roleModel != null) {
+            roleRepository.delete(roleModel);
+        }
     }
 
-    // Verilen id'ye sahip rolü getirir
-    @PostMapping
-    public void getRole() {
-        // get role
+    @GetMapping("/getPermissions}")
+    public HashMap<RequestMethod, String> getPermissions() throws Exception {
+            return endpointScanner.scanEndpoints();
     }
 
-    // Tüm rolleri getirir
-    @PostMapping
-    public void getRoles() {
-        // get roles
+    @PostMapping("/addPermission/{roleName}")
+    public ResponseEntity<String> addPermission(@PathVariable("roleName") String roleName, @RequestBody PermissonModel permissonModel) {
+        RoleModel roleModel = roleRepository.findByName(roleName).orElse(null);
+        roleModel.getPermissons().add(permissonModel);
+        return ResponseEntity.ok("Permission added");
     }
 
-    // arslan.kucukkafa: Aşşağıdaki 3 metotun işlevleri user ile ilişkili
-    // User'a rol atar
-    @PostMapping
-    public void assignRole() {
-        // assign role
+    @DeleteMapping("/deletePermission/{roleName}")
+    public ResponseEntity<String> deletePermission(@PathVariable("roleName") String roleName, @RequestBody PermissonModel permissonModel) {
+        RoleModel roleModel = roleRepository.findByName(roleName).orElse(null);
+        roleModel.getPermissons().remove(permissonModel);
+        return ResponseEntity.ok("Permission removed");
     }
 
-    // Mevcut rolü kaldırır
-    @PostMapping
-    public void unassignRole() {
-        // unassign role
+    // arslan.kucukkafa: burası biraz saçma olmuş
+    @PutMapping("/updatePermission}")
+    public ResponseEntity<String> updatePermission( @RequestBody RoleModel roleModel) {
+        roleRepository.save(roleModel);
+        return ResponseEntity.ok("Permission updated");
     }
-
-    // Mevcut rolünü getirir
-    @GetMapping
-    public void getAssignedRole() {
-        // get assigned roles
-    }*/
-
 }

@@ -1,13 +1,23 @@
 package com.arslankucukkafa.labormarketauth.idm.model.DTO;
 
-public record UserLoginDto(String username, String password) {
-    public UserLoginDto {
-        if (username == null || username.isBlank() || username.length()<7) {
-            throw new IllegalArgumentException("Username cannot be null or empty");
-        }
-        if (password == null || password.isBlank() || password.length()<7) {
-            throw new IllegalArgumentException("Password cannot be null or empty");
-        }
+public class UserLoginDto {
+
+    private String username;
+    private String password;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
-
