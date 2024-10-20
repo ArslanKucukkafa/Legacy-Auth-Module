@@ -1,5 +1,6 @@
 package com.arslankucukkafa.labormarketauth.util;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class JwtService implements Serializable {
     public String getSubjectFromToken(String secret, String token){
         try {
             return Jwts.parser().verifyWith(getSigningKey(secret)).build().parseClaimsJws(token).getBody().getSubject();
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e) {
             LOGGER.error("Error getting username from token: ", e);
             return null;
         }

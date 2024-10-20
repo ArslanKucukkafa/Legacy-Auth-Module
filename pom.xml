@@ -84,6 +84,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+<!--       arslan.kucukkafa: Redis cache dependecncies-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
         <!--arslan.kucukkafa: ipgeolocation kullanılması gerek çünkü sadece türkiye için erişim izni vermek istiyorum. Interceptor yada CustomFilter yazarak kontrol edilebilir-->
 <!--        <dependency>-->

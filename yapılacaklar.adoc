@@ -2,3 +2,13 @@
 2-Component ve Service ayrımı net olmalı
 3-AccountVerified yapısı netleştirilmeli
 4-Two factor authentication yapısındaki jwt token yapısından emin degilim
+5-Request ve Response için standartlar belirlenmeli
+6-Herkese açık endpointler için ayrı bir role tanımlanmalı mı yoksa, tüm roller herkese açık rolü içermeli mi? // yapıldı
+7-User üzerinde rollerin refaransını tutmak gerek çünkü role update edildiginde user üzerinde de güncellenmeli
+8-CustomOAuth2SuccessHandler github ile login olduktan sonra user sync edilip db ye kaydedildi.
+Ama daha sonra oatuh login form yönlendirmesi artık olmadıgı için direkt olarak gitmek istegi endpointe Oauth2 ile gidebiliyor.
+Ve dolayısı ile Interceptordeki DefaultOauth2User'ın UserModel' cast edilmesi hata veriyor. Mantık hatası var mı ?
+
+8-1. buraya normalde oauth2 ile erişemeyecek, çünkü şuanda permitall dan SecurityContextHolder gerekli permissionları check etmeye çalışıyor. Ama normalde ya defaultrole ve herkese açık rolden permission kontrolü yapması lazım
+8-2 oauth2 ile authenticate olan kullanıcı login olduktan sonra normal bir şekilde authenticate olmalı
+8-3 kullanıcı oauth2 ile sadece signup olur ve token döner, db de zaten kayıtlı ise token döner. Ama bir procces endpointine Oauth2User ile istek atamaz.

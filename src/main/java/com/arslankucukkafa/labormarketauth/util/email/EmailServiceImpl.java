@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class EmailServiceImpl implements EmailService {
     private final String InfoHtmlTemplate = "InfoEmail.html";
     private final String AuthenticateHtmlTemplate = "AuthenticateEmail.html";
-    private final String WarningHtmlTemplate = "WarningEmail.html.html";
+    private final String WarningHtmlTemplate = "WarningEmail.html";
     private final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
     private JavaMailSender javaMailSender;
 //    private EmailAuthConfigurationProperties emailAuthConfigurationProperties; EmailAuthConfigurationProperties emailAuthConfigurationProperties,
