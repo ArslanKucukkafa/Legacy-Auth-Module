@@ -1,6 +1,6 @@
 package com.arslankucukkafa.labormarketauth.idm.role.model.dto;
 
-import com.arslankucukkafa.labormarketauth.idm.permission.model.PermissonModel;
+import com.arslankucukkafa.labormarketauth.idm.role.model.Permission;
 import com.arslankucukkafa.labormarketauth.idm.role.model.RoleModel;
 import jakarta.annotation.Nullable;
 
@@ -11,7 +11,7 @@ public class RoleDto {
     public String name;
     public String description;
     @Nullable
-    public List<PermissonModel> permissions;
+    public List<Permission> permissions;
 
     public RoleDto(String name) {
         this.name = name;
@@ -21,6 +21,7 @@ public class RoleDto {
         RoleModel roleModel = new RoleModel();
         roleModel.setName(roleDto.getName());
         roleModel.setDescription(roleDto.getDescription());
+        roleModel.setPermissons(roleDto.getPermissions());
         return roleModel;
     }
 
@@ -40,11 +41,11 @@ public class RoleDto {
         this.description = description;
     }
 
-    public List<PermissonModel> getPermissions() {
+    public List<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<PermissonModel> permissions) {
+    public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
     }
 }

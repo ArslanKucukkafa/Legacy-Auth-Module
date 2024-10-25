@@ -2,7 +2,6 @@ package com.arslankucukkafa.labormarketauth.idm.user.repository;
 
 import com.arslankucukkafa.labormarketauth.idm.user.model.UserModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,8 +12,6 @@ public interface UserRepository extends MongoRepository<UserModel, String> {
     Optional<UserModel> findUserModelById(String id);
     Optional<UserModel> findUserModelByUsername(String username);
 
-    //todo: Burda email contact içerisinde. Yeniden düzenlenmesi gerekiyor.
-    @Query("{'contact.email': ?0}")
-    Optional<UserModel> findUserModelByContactEmail(String contact);
+    // fixme: referans id ile arama yapılacak
     List<UserModel> findAll();
 }

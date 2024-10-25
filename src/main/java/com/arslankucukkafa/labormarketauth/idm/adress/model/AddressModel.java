@@ -1,16 +1,27 @@
 package com.arslankucukkafa.labormarketauth.idm.adress.model;
 
+import jakarta.annotation.Nullable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * AddressModel daha çok tek taraflı bir model oldu. Çünkü adres modellinde speesifik bir property bulunmoyor.
+ * Anlamsal olarak UserModel içerisinde bir adres olduğunu düşünebiliriz.
+ * İleride resourceUrn gibi bir property eklenerek bu modelin daha anlamlı hale getirilebilir.
+ */
 @Document
 public class AddressModel {
     @Id
     private String id;
+    @Nullable
     private String street;
+    @Nullable
     private String city;
+    @Nullable
     private String state;
+    @Nullable
     private String zipCode;
+    @Nullable
     private String country;
 
     public AddressModel() {

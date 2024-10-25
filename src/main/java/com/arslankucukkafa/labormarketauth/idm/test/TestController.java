@@ -1,15 +1,15 @@
 package com.arslankucukkafa.labormarketauth.idm.test;
 
-import com.arslankucukkafa.labormarketauth.idm.permission.model.PermissonModel;
 import com.arslankucukkafa.labormarketauth.util.EndpointScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/v1/test")
@@ -30,9 +30,9 @@ public class TestController  {
     }
 
     @GetMapping("/scan")
-    public List<PermissonModel> scan() throws IOException {
+    public HashMap<String, RequestMethod> scan() throws IOException {
         try {
-            return enpointScanner.scanEndpoints();
+            return enpointScanner.getEndpoints();
         } catch (Exception e) {
             e.printStackTrace();
         }

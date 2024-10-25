@@ -1,10 +1,11 @@
 package com.arslankucukkafa.labormarketauth.idm.role.controller;
 
-import com.arslankucukkafa.labormarketauth.idm.permission.model.PermissonModel;
+import com.arslankucukkafa.labormarketauth.idm.role.model.Permission;
+import com.arslankucukkafa.labormarketauth.idm.role.model.RoleModel;
+import com.arslankucukkafa.labormarketauth.idm.role.model.dto.RoleDto;
 import com.arslankucukkafa.labormarketauth.idm.role.service.RoleService;
 import com.arslankucukkafa.labormarketauth.util.exception.ResourceNotFoundException;
-import com.arslankucukkafa.labormarketauth.idm.role.model.dto.RoleDto;
-import com.arslankucukkafa.labormarketauth.idm.role.model.RoleModel;
+import com.arslankucukkafa.labormarketauth.util.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 // arslan.kucukkafa: burada repository kullanılmış, bunu diger controller classları gibi servis üzerinden yapmak daha iyi olurdu
 
 @RestController
-@RequestMapping("/api/v1/role")
+@RequestMapping("/api/v1/roles")
 public class RoleController {
 
     private RoleService roleService;
@@ -23,56 +24,89 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public void createRole(@RequestBody RoleDto roleDto) {
         roleService.createRole(roleDto);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping()
     public List<RoleModel> getAllRoles() {
         return roleService.findAllRoles();
     }
 
-    @GetMapping("/get/{roleName}")
-    public RoleModel getRole(@PathVariable("roleName") String roleName) {
-        return roleService.findRoleByName(roleName);
-    }
-
-    @DeleteMapping("/delete/{roleName}")
-    public void deleteRole(@PathVariable("roleName") String roleName) {
-        roleService.deleteRole(roleName);
-    }
-
-    @GetMapping("/getPermissions")
-    public List<PermissonModel> getPermissions() throws Exception {
-            return roleService.findAllPermissions();
-    }
-
-    @PostMapping("/addPermission/")
-    public ResponseEntity<String> addPermission(@RequestParam("roleName") String roleName, @RequestParam("permissionId") String permissionId) {
+    @GetMapping("/{roleName}")
+    public ResponseEntity<ApiResponse<RoleModel>> getRole(@PathVariable("roleName") String roleName) {
         try {
-            roleService.addPermissionToRole(roleName, permissionId);
-            return new ResponseEntity<>("permission add to role",HttpStatus.OK);
-        } catch (ResourceNotFoundException rsc) {
-            return new ResponseEntity<>(rsc.getMessage(), HttpStatus.NOT_FOUND);
+            var role = roleService.findRoleByName(roleName);
+            return ResponseEntity.ok(new ApiResponse<>("Role found", role, HttpStatus.OK));
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.ok(new ApiResponse<>("Role not found", null, HttpStatus.NOT_FOUND));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(new ApiResponse<>("Exception occured", null, HttpStatus.BAD_REQUEST));
         }
     }
 
-    @DeleteMapping("/deletePermission/{roleName}")
-    public ResponseEntity<String> deletePermission(@RequestParam("roleName") String roleName, @RequestParam("permissionId") String permissionId) {
+    @DeleteMapping("/{roleName}")
+    public ResponseEntity<ApiResponse<String>> deleteRole(@PathVariable("roleName") String roleName) {
         try {
-            roleService.deletePermissionFromRole(roleName, permissionId);
-            return new ResponseEntity<>("permission add to role",HttpStatus.OK);
-        } catch (ResourceNotFoundException rsc) {
-            return new ResponseEntity<>(rsc.getMessage(), HttpStatus.NOT_FOUND);
+            roleService.deleteRole(roleName);
+            return ResponseEntity.ok(new ApiResponse<>("Role deleted", roleName, HttpStatus.NO_CONTENT));
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.ok(new ApiResponse<>("Role not found", roleName, HttpStatus.NOT_FOUND));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(new ApiResponse<>("Exception occured", ex.getMessage(), HttpStatus.BAD_REQUEST));
         }
     }
 
 
-    @PostMapping("/updatePermissions")
-    public ResponseEntity<String> updatePermissions() {
-        roleService.updatePermissions();
-        return new ResponseEntity<>("Permissions updated", HttpStatus.OK);
+    @GetMapping("/permissions")
+    public ResponseEntity<ApiResponse<List<Permission>>> getPermissions() throws Exception {
+        try {
+            List<Permission> permissions = roleService.getAllPermissions();
+            return ResponseEntity.ok(new ApiResponse<>("Current Endpoints Informations", permissions, HttpStatus.OK));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(new ApiResponse<>(ex.getMessage(), null, HttpStatus.BAD_REQUEST));
+        }
+    }
+
+    @PostMapping("/{roleName}/permissions")
+    public ResponseEntity<ApiResponse<String>> addPermission(@RequestParam("roleName") String roleName, @RequestBody Permission permission) {
+        try {
+            var model =  roleService.addPermissionToRole(roleName, permission);
+            StringBuilder message = new StringBuilder("permission added to role: ").append(roleName);
+            return ResponseEntity.ok(new ApiResponse<>(message.toString(), model.toString() ,HttpStatus.OK));
+        } catch (ResourceNotFoundException ex) {
+            StringBuilder message = new StringBuilder("role not found with name: ").append(roleName);
+            return ResponseEntity.ok(new ApiResponse<>(message.toString(), ex.getMessage(),HttpStatus.NOT_FOUND));
+        } catch (Exception ex) {
+            StringBuilder message = new StringBuilder("exception occure when to add: ").append(permission.toString()).append(" to role: ").append(roleName);
+            return ResponseEntity.ok(new ApiResponse<>(message.toString(), ex.getMessage(),HttpStatus.BAD_REQUEST));
+        }
+    }
+
+    @DeleteMapping("/{roleName}/permissions")
+    public ResponseEntity<ApiResponse<String>> deleteRole(@RequestParam("roleName") String roleName, @RequestBody Permission permission) {
+        try {
+            var model = roleService.removePermissionFromRole(roleName, permission);
+            StringBuilder message = new StringBuilder("permission removed from role: ").append(roleName);
+            return ResponseEntity.ok(new ApiResponse<>(message.toString(), model.toString(), HttpStatus.NO_CONTENT));
+        } catch (ResourceNotFoundException ex) {
+            StringBuilder message = new StringBuilder("exception occure when to remove: ").append(permission.toString()).append(" from role: ").append(roleName);
+            return ResponseEntity.ok(new ApiResponse<>(message.toString(), ex.getMessage(), HttpStatus.BAD_REQUEST));
+        }
+    }
+
+
+    @PutMapping("/{roleName}")
+    public ResponseEntity<ApiResponse<String>> updateRole(@RequestBody RoleModel roleModel) {
+        try {
+            var model = roleService.roleUpdate(roleModel);
+            StringBuilder message = new StringBuilder("Permissions updated for role: ").append(roleModel.getName());
+            return ResponseEntity.ok(new ApiResponse<>(message.toString(), model.toString(), HttpStatus.OK));
+        } catch (ResourceNotFoundException ex) {
+            StringBuilder message = new StringBuilder("exception occure when to update role: ").append(roleModel.getName());
+            return ResponseEntity.ok(new ApiResponse<>(message.toString(), ex.getMessage(), HttpStatus.BAD_REQUEST));
+        }
     }
 
 }

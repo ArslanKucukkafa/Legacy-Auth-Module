@@ -1,7 +1,7 @@
 package com.arslankucukkafa.labormarketauth.idm.role.model;
 
-import com.arslankucukkafa.labormarketauth.idm.permission.model.PermissonModel;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -11,14 +11,16 @@ public class RoleModel {
 
     @Id
     private String id;
+    @Indexed(unique = true)
     private String name;
     private String description;
+
 /*
     fixme: Burda permission için referans tutsam mı bilemedim. Çünkü endpoint pathleri değişebilir
      . Ama bu durumda sorgu için yapılan repository işlemleri biraz daha karmaşık hale gelebilir.
      Ayrıca SecurityContextHolder dan direk olarak permissionları alınamayan bir yapı oluşur.
 */
-    private List<PermissonModel> permissons;
+    private List<Permission> permissons;
     public String getId() {
         return id;
     }
@@ -35,15 +37,15 @@ public class RoleModel {
         this.name = name;
     }
 
-    public List<PermissonModel> getPermissons() {
+    public List<Permission> getPermissons() {
         return permissons;
     }
 
-    public void setPermissons(List<PermissonModel> permissons) {
+    public void setPermissons(List<Permission> permissons) {
         this.permissons = permissons;
     }
 
-    public void addPermissons(PermissonModel permissons) {
+    public void addPermissons(Permission permissons) {
         this.permissons.add(permissons);
     }
 
@@ -54,4 +56,6 @@ public class RoleModel {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }
+

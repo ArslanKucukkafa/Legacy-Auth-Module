@@ -1,6 +1,7 @@
 package com.arslankucukkafa.labormarketauth.idm.user.model;
 
 import com.arslankucukkafa.labormarketauth.idm.adress.model.AddressModel;
+import com.arslankucukkafa.labormarketauth.idm.auth.model.sync.Provider;
 import com.arslankucukkafa.labormarketauth.idm.contact.model.ContactModel;
 import com.arslankucukkafa.labormarketauth.idm.role.model.RoleModel;
 import jakarta.annotation.Nullable;
@@ -24,23 +25,27 @@ public class UserModel implements UserDetails {
     private String username;
     @Nullable
     private String password;
-    @Nullable
-    @DBRef
-    private ContactModel contact;
-    @Nullable
-    @DBRef
-    private AddressModel address;
     private String name;
     private String surname;
+    // todo: Bunun tipini degiştirmemiz lazım
     private String birthDate;
+    // todo: Bu tc vatandaşlıgı doğrulaması sırasında set edilecek
     private boolean isAccountVerified;
+    // todo: update işlemlerinde version kontrolü yapılacak
+    private int version;
+/*
+    arslan.kucukkafa: Bu kullanıcının daha önceden hangi oauth sağlayıcısı ile giriş yaptığını tutar.
+     Her saglayacı email dışında farklı bilgiler sakladıgından dolayı, farklı oauth saglayıcılarından gelen bilgileri birleştirmek ve db'yi zenginleştirmeliyiz.
+*/
+    @Nullable
+    private List<Provider> provider;
+    @DBRef
+    private ContactModel contact;
+    @DBRef
+    private AddressModel address;
     @DBRef
     private List<RoleModel> role;
-    private int version;
-    @Nullable
-    private String avatar_url;
-    @Nullable
-    private String github_url;
+
 
 
     public String getUsername() {
@@ -133,27 +138,19 @@ public class UserModel implements UserDetails {
         this.version = version;
     }
 
-    public String getAvatar_url() {
-        return avatar_url;
-    }
-
-    public void setAvatar_url(String avatar_url) {
-        this.avatar_url = avatar_url;
-    }
-
-    public String getGithub_url() {
-        return github_url;
-    }
-
-    public void setGithub_url(String github_url) {
-        this.github_url = github_url;
-    }
-
-    public boolean getAccountVerified() {
+    public boolean isAccountVerified() {
         return isAccountVerified;
     }
 
     public void setAccountVerified(boolean accountVerified) {
         isAccountVerified = accountVerified;
+    }
+
+    public List<Provider> getProvider() {
+        return provider;
+    }
+
+    public void setProvider(List<Provider> provider) {
+        this.provider = provider;
     }
 }

@@ -12,3 +12,10 @@ Ve dolayısı ile Interceptordeki DefaultOauth2User'ın UserModel' cast edilmesi
 8-1. buraya normalde oauth2 ile erişemeyecek, çünkü şuanda permitall dan SecurityContextHolder gerekli permissionları check etmeye çalışıyor. Ama normalde ya defaultrole ve herkese açık rolden permission kontrolü yapması lazım
 8-2 oauth2 ile authenticate olan kullanıcı login olduktan sonra normal bir şekilde authenticate olmalı
 8-3 kullanıcı oauth2 ile sadece signup olur ve token döner, db de zaten kayıtlı ise token döner. Ama bir procces endpointine Oauth2User ile istek atamaz.
+
+9-PermissionModel kaldırılacak. Gerekli propertyler RoleModel'e eklenecek. Amaç:
+- Permission için tanımlanan mvc yapısından kurtulunması.
+- Permission update durumlarında zaten Model üzerinde tutmanın referansa tutulan modele bir etkisi olmaması.
+- Permission için güncel endpoint bilgilerine, zaten EndpointScanner ile erişilebilir.
+
+

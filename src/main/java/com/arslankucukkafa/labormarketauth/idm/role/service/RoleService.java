@@ -1,55 +1,50 @@
 package com.arslankucukkafa.labormarketauth.idm.role.service;
 
-import com.arslankucukkafa.labormarketauth.idm.permission.model.PermissonModel;
-import com.arslankucukkafa.labormarketauth.idm.permission.repository.PermissionRepository;
-import com.arslankucukkafa.labormarketauth.util.exception.ResourceNotFoundException;
-import com.arslankucukkafa.labormarketauth.idm.role.model.dto.RoleDto;
+import com.arslankucukkafa.labormarketauth.idm.role.model.Permission;
 import com.arslankucukkafa.labormarketauth.idm.role.model.RoleModel;
+import com.arslankucukkafa.labormarketauth.idm.role.model.dto.RoleDto;
 import com.arslankucukkafa.labormarketauth.idm.role.repository.RoleRepository;
 import com.arslankucukkafa.labormarketauth.util.EndpointScanner;
+import com.arslankucukkafa.labormarketauth.util.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class RoleService {
 
     private RoleRepository roleRepository;
-    private PermissionRepository permissionRepository;
     private EndpointScanner endpointScanner;
 
-    public RoleService(RoleRepository roleRepository, PermissionRepository permissionRepository, EndpointScanner endpointScanner) {
+    public RoleService(RoleRepository roleRepository, EndpointScanner endpointScanner) {
         this.roleRepository = roleRepository;
-        this.permissionRepository = permissionRepository;
         this.endpointScanner = endpointScanner;
     }
 
-    // PERMİSSİONS
-    public List<PermissonModel> findAllPermissions(){
-        return permissionRepository.findAll();
+    public List<Permission> getAllPermissions() {
+        List<Permission> permissions = new ArrayList<>();
+        try {
+             endpointScanner.getEndpoints().forEach((key, value) -> permissions.add(new Permission(key, value)));
+             return permissions;
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Error occured while fetching permissions.");
+        }
     }
 
-    @Transactional
-    public void addPermissionToRole(String roleName, String permissionPath) {
+    public RoleModel addPermissionToRole(String roleName, Permission permission) {
         var role = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found with name: " + roleName));
-        var permission = permissionRepository.findById(permissionPath)
-                .orElseThrow(() -> new ResourceNotFoundException("Permission not found with id: " + permissionPath));
-        role.addPermissons(permission);
-        roleRepository.save(role);
+        role.getPermissons().add(permission);
+        return roleRepository.save(role);
     }
 
-    public void deletePermissionFromRole(String roleName, String permissionPath) {
+    public RoleModel removePermissionFromRole(String roleName, Permission permission) {
         var role = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found with name: " + roleName));
-
-        // arslan.kucukkafa böyle bir permission var mı diye kontrol etmiyoruz. Çünkü biz zaten var olanları gösteriyoruz. onu da kontrol etmeyelim aq
-        role.getPermissons().removeIf(permission -> permission.getPath().equals(permissionPath));
-
-        roleRepository.save(role);
+        role.getPermissons().remove(permission);
+        return roleRepository.save(role);
     }
-
     // ROLES
 
     public List<RoleModel> findAllRoles(){
@@ -57,31 +52,27 @@ public class RoleService {
     }
 
     public RoleModel findRoleByName(String name){
-        return roleRepository.findByName(name).orElseThrow(NullPointerException::new);
+        return roleRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Role not found with name: " + name));
     }
 
     public void createRole(RoleDto roleDto){
-        RoleModel roleModel = new RoleModel();
-        roleModel.setDescription(roleDto.getDescription());
-        roleModel.setName(roleDto.getName());
-        roleModel.setPermissons(roleDto.getPermissions());
+        RoleModel roleModel = roleDto.convertToRoleModel(roleDto);
         roleRepository.save(roleModel);
     }
 
     // TODO: RoleName'ler uniqe olacak
-    public void deleteRole(String roleName){
-        roleRepository.deleteRoleModelByName(roleName);
+    public void deleteRole(String roleName) {
+        RoleModel role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found with name: " + roleName));
+        roleRepository.delete(role);
     }
 
-    // arslan.kucukkafa admin update etmeyi gerekli gördügünde kullanılablir
-    public void updatePermissions(){
-        permissionRepository.deleteAll();
-        try {
-            List<PermissonModel> permissonModelList = endpointScanner.scanEndpoints();
-            permissionRepository.saveAll(permissonModelList);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    /**
+     * Bu method kullanılarak permissionlar için de düzenleme işlemi yapılabilir */
+    public RoleModel roleUpdate(RoleModel roleModel) {
+        var role = roleRepository.findByName(roleModel.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found with name: " + roleModel.getName()));
+        return roleRepository.save(role);
     }
 
 }

@@ -10,5 +10,4 @@ import java.util.Optional;
 public interface RoleRepository extends MongoRepository<RoleModel, String> {
     Optional<RoleModel> findByName(String name);
 
-    void deleteRoleModelByName(String name);
 }

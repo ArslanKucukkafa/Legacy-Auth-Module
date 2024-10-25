@@ -21,3 +21,6 @@
 
 ## Fıkır-2
 * Adresses, Contact, Accounts, Billng gibi kısımların zorunlu olup olmaması opsiyonel olabilir.
+
+## Fıkır-3 Proje bitiş sonrasında refactor işleminde, immutable bagımlılıkların oluşturulması, model, getter, setter, mapper gibi yapıların auto generate edilecek şekilde oluşturulması.
+## Fıkır-4 ResourceUrn yapısının oluşturulması. Ne içi ? 1-m Modellere ait private id lerin dışarıdan erişilebilir olmamasını sağlamak. Verilere bir erişim noktası oluşturmak. 

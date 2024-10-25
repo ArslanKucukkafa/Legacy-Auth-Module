@@ -1,6 +1,7 @@
 package com.arslankucukkafa.labormarketauth.idm.auth.model;
 
 import com.arslankucukkafa.labormarketauth.idm.adress.model.AddressModel;
+import com.arslankucukkafa.labormarketauth.idm.auth.model.sync.Provider;
 import com.arslankucukkafa.labormarketauth.idm.contact.model.ContactModel;
 import com.arslankucukkafa.labormarketauth.idm.user.model.UserModel;
 import jakarta.validation.constraints.NotNull;
@@ -38,19 +39,39 @@ public class AuthRegisterDto {
     public AuthRegisterDto() {
     }
 
-    public UserModel toUserModel() {
+    public UserModel toUserModel(AuthRegisterDto authRegisterDto) {
         UserModel userModel = new UserModel();
-        userModel.setName(name);
-        userModel.setSurname(surname);
-        userModel.setUsername(username);
-        userModel.setPassword(password);
-        userModel.setBirthDate(birthDate);
-        userModel.setVersion(version);
-        userModel.setContact(contact);
+        userModel.setName(authRegisterDto.getName());
+        userModel.setSurname(authRegisterDto.getSurname());
+        userModel.setUsername(authRegisterDto.getUsername());
+        userModel.setPassword(authRegisterDto.getPassword());
+        userModel.setBirthDate(authRegisterDto.getBirthDate());
+        userModel.setVersion(authRegisterDto.getVersion());
         userModel.setRole(new ArrayList<>());
+        userModel.setProvider(new ArrayList<>());
+        userModel.getProvider().add(Provider.DAO_PROVIDER);
         userModel.setAccountVerified(false);
-        userModel.setAddress(address);
         return userModel;
+    }
+
+    public ContactModel toContactModel(AuthRegisterDto authRegisterDto) {
+        ContactModel contactModel = new ContactModel();
+        contactModel.setAvatar_url(authRegisterDto.getContact().getAvatar_url());
+        contactModel.setEmail(authRegisterDto.getContact().getEmail());
+        contactModel.setGithub_url(authRegisterDto.getContact().getGithub_url());
+        contactModel.setPhone(authRegisterDto.getContact().getPhone());
+        contactModel.setAdditionalInfo(authRegisterDto.getContact().getAdditionalInfo());
+        return contactModel;
+    }
+
+    public AddressModel toAddressModel(AuthRegisterDto authRegisterDto) {
+        AddressModel addressModel = new AddressModel();
+        addressModel.setCity(authRegisterDto.getAddress().getCity());
+        addressModel.setCountry(authRegisterDto.getAddress().getCountry());
+        addressModel.setState(authRegisterDto.getAddress().getState());
+        addressModel.setStreet(authRegisterDto.getAddress().getStreet());
+        addressModel.setZipCode(authRegisterDto.getAddress().getZipCode());
+        return addressModel;
     }
 
     public String getName() {
