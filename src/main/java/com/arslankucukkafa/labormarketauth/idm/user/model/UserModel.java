@@ -27,47 +27,43 @@ public class UserModel implements UserDetails {
     private String password;
     private String name;
     private String surname;
-    // todo: Bunun tipini degiştirmemiz lazım
+    // ctienzship_todo: Bunun tipini degiştirmemiz lazım
     private String birthDate;
-    // todo: Bu tc vatandaşlıgı doğrulaması sırasında set edilecek
+    // ctienzship_todo: Bu tc vatandaşlıgı doğrulaması sırasında set edilecek
     private boolean isAccountVerified;
-    // todo: update işlemlerinde version kontrolü yapılacak
+    // ctienzship_todo: update işlemlerinde version kontrolü yapılacak
     private int version;
 /*
     arslan.kucukkafa: Bu kullanıcının daha önceden hangi oauth sağlayıcısı ile giriş yaptığını tutar.
      Her saglayacı email dışında farklı bilgiler sakladıgından dolayı, farklı oauth saglayıcılarından gelen bilgileri birleştirmek ve db'yi zenginleştirmeliyiz.
 */
     @Nullable
-    private List<Provider> provider;
-    @DBRef
-    private ContactModel contact;
-    @DBRef
-    private AddressModel address;
-    @DBRef
-    private List<RoleModel> role;
+    private List<Provider> providers;
 
+    private String contactId;
+    private String addressId;
+    private List<String> roles = new ArrayList<>();
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<String> roles = getRoles();
+        List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for (String roleName : roles) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(roleName));
+        }
+        return grantedAuthorities;
+    }
 
     public String getUsername() {
         return username;
     }
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<RoleModel> role = getRoles();
-        List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (RoleModel roleModel : role) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(roleModel.getName()));
-        }
-        return grantedAuthorities;
-    }
-
-    @Override
     public String getPassword() {
         return password;
     }
 
-    public List<RoleModel> getRoles() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
     public String getId() {
@@ -86,20 +82,20 @@ public class UserModel implements UserDetails {
         this.password = password;
     }
 
-    public ContactModel getContact() {
-        return contact;
+    public String getContact() {
+        return contactId;
     }
 
-    public void setContact(ContactModel contact) {
-        this.contact = contact;
+    public void setContact(String contactId) {
+        this.contactId = contactId;
     }
 
-    public AddressModel getAddress() {
-        return address;
+    public String getAddress() {
+        return addressId;
     }
 
-    public void setAddress(AddressModel address) {
-        this.address = address;
+    public void setAddress(String addressId) {
+        this.addressId = addressId;
     }
 
     public String getName() {
@@ -126,8 +122,8 @@ public class UserModel implements UserDetails {
         this.birthDate = birthDate;
     }
 
-    public void setRole(List<RoleModel> role) {
-        this.role = role;
+    public void setRole(List<String> role) {
+        this.roles = roles;
     }
 
     public int getVersion() {
@@ -146,11 +142,11 @@ public class UserModel implements UserDetails {
         isAccountVerified = accountVerified;
     }
 
-    public List<Provider> getProvider() {
-        return provider;
+    public List<Provider> getProviders() {
+        return providers;
     }
 
-    public void setProvider(List<Provider> provider) {
-        this.provider = provider;
+    public void setProvider(List<Provider> providers) {
+        this.providers = providers;
     }
 }

@@ -23,10 +23,8 @@ public class RoleService {
     }
 
     public List<Permission> getAllPermissions() {
-        List<Permission> permissions = new ArrayList<>();
         try {
-             endpointScanner.getEndpoints().forEach((key, value) -> permissions.add(new Permission(key, value)));
-             return permissions;
+             return endpointScanner.getEndpoints();
         } catch (Exception e) {
             throw new ResourceNotFoundException("Error occured while fetching permissions.");
         }

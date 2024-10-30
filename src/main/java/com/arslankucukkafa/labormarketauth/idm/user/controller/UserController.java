@@ -24,12 +24,12 @@ public class UserController {
         return "All Active Users";
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteUser(@RequestParam("id") String id) {
         return "User Deleted";
     }
 
-    // todo: bir QueryFilter dto or generic class oluşturulabilir, çünkü herbir filtre için ayrı bir method oluşturmak yerine tek bir method ile tüm filtreleme işlemleri yapılabilir
+    // ctienzship_todo: bir QueryFilter dto or generic class oluşturulabilir, çünkü herbir filtre için ayrı bir method oluşturmak yerine tek bir method ile tüm filtreleme işlemleri yapılabilir
 
 
 

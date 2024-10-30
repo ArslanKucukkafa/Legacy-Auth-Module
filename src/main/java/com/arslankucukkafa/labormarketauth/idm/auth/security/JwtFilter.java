@@ -1,7 +1,10 @@
 package com.arslankucukkafa.labormarketauth.idm.auth.security;
 
+import com.arslankucukkafa.labormarketauth.idm.role.model.Permission;
+import com.arslankucukkafa.labormarketauth.idm.user.model.UserModel;
 import com.arslankucukkafa.labormarketauth.idm.user.service.UserService;
 import com.arslankucukkafa.labormarketauth.util.JwtService;
+import com.arslankucukkafa.labormarketauth.util.PrincipalHolder;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,16 +13,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
-// todo: refactor this class name because jwt filter is general name
-public class JwtFilter extends OncePerRequestFilter {
+// ctienzship_todo: refactor this class name because jwt filter is general name
+public class JwtFilter extends OncePerRequestFilter  {
 
     @Value("${app.jwt.secret}")
     private String secret;
@@ -54,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (email != null && jwtToken!=null && SecurityContextHolder.getContext().getAuthentication() == null){
             // Fixme: AYNI email ile birden fazla kullanıcı oldugunda hata alınabilir. init.json dosyasında email alanını unique yapabilirsiniz.
-            UserDetails userDetails = userService.loadUserByUsername(email);
+            UserModel userDetails = userService.loadUserByUsername(email);
             if (jwtService.validateToken(secret,jwtToken)) {
                 System.out.println(jwtToken);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,

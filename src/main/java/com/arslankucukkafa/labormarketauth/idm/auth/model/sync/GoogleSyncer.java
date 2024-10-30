@@ -7,19 +7,19 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 public class GoogleSyncer implements Syncer{
 
     @Override
     public UserModel userSync(OAuth2User oAuth2User) {
         UserModel userModel = new UserModel();
-        ContactModel contactModel = new ContactModel();
-        contactModel.setEmail(oAuth2User.getAttribute("email"));
         userModel.setUsername(oAuth2User.getAttribute("name"));
         userModel.setName(oAuth2User.getAttribute("given_name"));
         userModel.setSurname(oAuth2User.getAttribute("family_name"));
-        userModel.setContact(contactModel);
-        userModel.getProvider().add(Provider.GOOGLE);
+        userModel.getProviders().add(Provider.GOOGLE);
+        userModel.setRole(new ArrayList<>());
         return userModel;
     }
 
@@ -39,7 +39,7 @@ public class GoogleSyncer implements Syncer{
     @Override
     public UserModel updateUserModel(UserModel currentModel, UserModel aouthUserModel) {
         // TODO: Oauthdan user için neler alınabilir?
-        currentModel.getProvider().add(Provider.GOOGLE);
+        currentModel.getProviders().add(Provider.GOOGLE);
         return currentModel;
     }
 

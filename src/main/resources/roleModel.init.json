@@ -1,26 +1,290 @@
 [
   {
-    "_id": "role1",
-    "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
-    "name": "\"MAHMUT\"",
-    "permissions": []
+    "_id": "DEFAULT_ROLE",
+    "name": "DEFAULT_ROLE",
+    "_class": "com.arslankucukkafa.labormarketauth.idm.role.model.RoleModel",
+    "description": "Kullanıcı kayıt oldugunda erişebilecegi izinleri içerir",
+    "permissions": [
+      {
+        "path": "/api/v1/user/delete",
+        "requestMethod": "DELETE"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}",
+        "requestMethod": "DELETE"
+      },
+      {
+        "path": "/api/v1/user/all",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/test/",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/v3/api-docs.yaml",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/test/test",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/auth/signup",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/swagger-ui.html",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/user",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/api/v1/citizenship/turkey/verify",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/api/v1/roles/permissions",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}/permissions",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/api/v1/test/scan",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/auth/signIn",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/v3/api-docs",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}/permissions",
+        "requestMethod": "DELETE"
+      },
+      {
+        "path": "/v3/api-docs/swagger-config",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}",
+        "requestMethod": "PUT"
+      },
+      {
+        "path": "/api/v1/user/all/isactive",
+        "requestMethod": "GET"
+      }
+    ]
   },
   {
-    "_id": "role2",
-    "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
-    "name": "\"ARSLAN\"",
-    "permissions": []
+    "_id": "PUBLIC_ROLE",
+    "name": "PUBLIC_ROLE",
+    "_class": "com.arslankucukkafa.labormarketauth.idm.role.model.RoleModel",
+    "description": "Kullanıcı kayıt oldugunda erişebilecegi izinleri içerir",
+    "permissions": [
+      {
+        "path": "/api/v1/user/delete",
+        "requestMethod": "DELETE"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}",
+        "requestMethod": "DELETE"
+      },
+      {
+        "path": "/api/v1/user/all",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/test/",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/v3/api-docs.yaml",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/test/test",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/auth/signup",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/swagger-ui.html",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/user",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/api/v1/citizenship/turkey/verify",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/api/v1/roles/permissions",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}/permissions",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/api/v1/test/scan",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/auth/signIn",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/v3/api-docs",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}/permissions",
+        "requestMethod": "DELETE"
+      },
+      {
+        "path": "/v3/api-docs/swagger-config",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}",
+        "requestMethod": "PUT"
+      },
+      {
+        "path": "/api/v1/user/all/isactive",
+        "requestMethod": "GET"
+      }
+    ]
   },
   {
-    "_id": "role3",
-    "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
-    "name": "KEREM",
-    "permissions": []
-  },
-  {
-    "_id": "role4",
-    "class": "com.arslankucukkafa.labormarketauth.idm.model.RoleModel",
-    "name": "ROLE_USER",
-    "permissions": []
+    "_id":"ADMIN",
+    "name": "ADMIN",
+    "_class": "com.arslankucukkafa.labormarketauth.idm.role.model.RoleModel",
+    "description": "Admin için genişletilmiş iznler",
+    "permissions": [
+      {
+        "path": "/api/v1/user/delete",
+        "requestMethod": "DELETE"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}",
+        "requestMethod": "DELETE"
+      },
+      {
+        "path": "/api/v1/user/all",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/test/",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/v3/api-docs.yaml",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/test/test",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/auth/signup",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/swagger-ui.html",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/user",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/api/v1/citizenship/turkey/verify",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/api/v1/roles/permissions",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}/permissions",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/api/v1/test/scan",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/auth/signIn",
+        "requestMethod": "POST"
+      },
+      {
+        "path": "/v3/api-docs",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}/permissions",
+        "requestMethod": "DELETE"
+      },
+      {
+        "path": "/v3/api-docs/swagger-config",
+        "requestMethod": "GET"
+      },
+      {
+        "path": "/api/v1/roles/{roleName}",
+        "requestMethod": "PUT"
+      },
+      {
+        "path": "/api/v1/user/all/isactive",
+        "requestMethod": "GET"
+      }
+    ]
   }
 ]

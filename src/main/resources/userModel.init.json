@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "_id": "672096078569271d65719b81",
+    "_class": "com.arslankucukkafa.labormarketauth.idm.user.model.UserModel",
+    "addressId": "672096058569271d65719b80",
+    "contactId": "672096058569271d65719b7f",
+    "isAccountVerified": false,
+    "name": "Arslan",
+    "providers": ["GITHUB"],
+    "roles": ["DEFAULT_ROLE"],
+    "surname": "Küçükkafa",
+    "username": "ArslanKucukkafa",
+    "version": 0
+  }
+]

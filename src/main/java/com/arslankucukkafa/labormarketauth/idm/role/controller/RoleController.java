@@ -37,7 +37,8 @@ public class RoleController {
     @GetMapping("/{roleName}")
     public ResponseEntity<ApiResponse<RoleModel>> getRole(@PathVariable("roleName") String roleName) {
         try {
-            var role = roleService.findRoleByName(roleName);
+            var role = roleService.
+                    findRoleByName(roleName);
             return ResponseEntity.ok(new ApiResponse<>("Role found", role, HttpStatus.OK));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.ok(new ApiResponse<>("Role not found", null, HttpStatus.NOT_FOUND));

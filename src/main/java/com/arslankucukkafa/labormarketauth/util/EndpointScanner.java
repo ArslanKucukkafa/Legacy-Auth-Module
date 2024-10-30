@@ -1,5 +1,6 @@
 package com.arslankucukkafa.labormarketauth.util;
 
+import com.arslankucukkafa.labormarketauth.idm.role.model.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -39,19 +42,22 @@ public class EndpointScanner implements ApplicationListener<ContextRefreshedEven
      */
 
 
-    public HashMap<String, RequestMethod> getEndpoints () throws Exception {
+    public List<Permission> getEndpoints () throws Exception {
         RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext
                 .getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
         Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping
                 .getHandlerMethods();
-        HashMap<String, RequestMethod> endpointMap = new HashMap<>();
+        List<Permission> permissionList = new ArrayList<>();
         map.forEach((key, value) -> {
             // Eğer method ismi "errorHtml" ise put işlemini atla
             if (!"basicErrorController".equals(value.getBean())) {
-                endpointMap.put(key.getPatternValues().iterator().next(), key.getMethodsCondition().getMethods().iterator().next());
+                var permission = new Permission(
+                        key.getPatternValues().iterator().next(),
+                        key.getMethodsCondition().getMethods().iterator().next().name());
+                permissionList.add(permission);
             }
         });
-        return endpointMap;
+        return permissionList;
     }
 
 }

@@ -14,20 +14,15 @@ public class GithubSyncer implements Syncer {
     @Override
     public UserModel userSync(OAuth2User oAuth2User) {
         UserModel userModel = new UserModel();
-
-        ContactModel contactModel = new ContactModel();
-        contactModel.setEmail(oAuth2User.getAttribute("email"));
-
-        String username = oAuth2User.getAttribute("name");
-        String[] nameParts = username.split(" ");
+        String username = oAuth2User.getAttribute("login");
+        String combinedName = oAuth2User.getAttribute("name");
+        String[] nameParts = combinedName.split(" ");
         var familyName = nameParts[nameParts.length - 1];
         var givenName = String.join(" ", Arrays.copyOfRange(nameParts, 0, nameParts.length - 1));
         userModel.setUsername(username);
         userModel.setSurname(familyName);
         userModel.setName(givenName);
         userModel.setProvider(Arrays.asList(Provider.GITHUB));
-        userModel.setRole(new ArrayList<>());
-
         return userModel;
     }
 
@@ -57,7 +52,7 @@ public class GithubSyncer implements Syncer {
 
     @Override
     public UserModel updateUserModel(UserModel currentModel, UserModel aouthUserModel) {
-        currentModel.getProvider().add(Provider.GITHUB);
+        currentModel.getProviders().add(Provider.GITHUB);
         return currentModel;
     }
 

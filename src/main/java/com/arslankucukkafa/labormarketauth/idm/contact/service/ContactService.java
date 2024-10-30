@@ -25,6 +25,10 @@ public class ContactService {
         return contactRepository.findByContactInfo(contactModel.getEmail(), contactModel.getPhone(), contactModel.getGithub_url(), contactModel.getAvatar_url());
     }
 
+    public Optional<ContactModel>getContactWithId(String contactId) {
+        return contactRepository.findById(contactId);
+    }
+
     public ContactModel saveContact(ContactModel contactModel) {
         try {
             return contactRepository.save(contactModel);

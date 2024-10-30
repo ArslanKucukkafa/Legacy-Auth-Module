@@ -6,7 +6,6 @@ import com.arslankucukkafa.labormarketauth.idm.auth.model.AuthLoginDto;
 import com.arslankucukkafa.labormarketauth.idm.auth.model.AuthRegisterDto;
 import com.arslankucukkafa.labormarketauth.idm.contact.model.ContactModel;
 import com.arslankucukkafa.labormarketauth.idm.contact.service.ContactService;
-import com.arslankucukkafa.labormarketauth.idm.role.model.RoleModel;
 import com.arslankucukkafa.labormarketauth.idm.role.service.RoleService;
 import com.arslankucukkafa.labormarketauth.idm.user.model.UserModel;
 import com.arslankucukkafa.labormarketauth.idm.user.service.UserService;
@@ -17,7 +16,6 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -74,13 +72,13 @@ public class AuthService {
             throw new RuntimeException("User already exists");
         } else {
             createUser(contactModel, addressModel, userModel);
-            String token = jwtService.generateToken(userModel.getContact().getEmail(),
+            String token = jwtService.generateToken(contactModel.getEmail(),
                     emailAuthConfigurationProperties.getRegister().getSecret(),
                     emailAuthConfigurationProperties.getRegister().getValidity());
 
             String url = baseUrl + "/auth/confirm?token=" + token;
             try {
-                emailService.sendConfirmationLinkEmail(userModel.getContact().getEmail(), url);
+                emailService.sendConfirmationLinkEmail(contactModel.getEmail(), url);
             } catch (Exception e) {
                 throw new RuntimeException("Error while sending confirmation email");
             }
@@ -95,7 +93,8 @@ public class AuthService {
         if(authentication.isAuthenticated()) {
             UserModel userModel = (UserModel) authentication.getPrincipal();
             var token = jwtService.generateToken(loginDto.getUsername(), emailAuthConfigurationProperties.getLogin().getSecret(), emailAuthConfigurationProperties.getLogin().getValidity());
-            emailService.sendAuthenticateEmail(userModel.getContact().getEmail(), token);
+            ContactModel contactModel = contactService.getContactWithId(userModel.getContact()).orElseThrow(() -> new RuntimeException("Contact not found"));
+            emailService.sendAuthenticateEmail(contactModel.getEmail(), token);
             return ResponseEntity.ok("Login code send to your email adress");
         }
 
@@ -118,13 +117,11 @@ public class AuthService {
         logger.info("Contact saved");
         AddressModel saveAddress = addressService.saveAddress(mappedAddress);
         logger.info("Address saved");
-        mappedUser.setContact(saveContact);
-        mappedUser.setAddress(saveAddress);
-        RoleModel defaultRoleModel = roleService.findRoleByName(defaultRole);
-        mappedUser.getRoles().add(defaultRoleModel);
+        mappedUser.setContact(saveContact.getId());
+        mappedUser.setAddress(saveAddress.getId());
+        // fixme: default role db de bulunmayabilir. Birisi adını degiştirirse yada silerse ne olacak? check edilmeli mi?
+        mappedUser.getRoles().add(defaultRole);
         logger.info("Default role found and added to user");
-        userService.saveUser(mappedUser);
-        logger.info("User saved");
         return userService.saveUser(mappedUser);
     }
 

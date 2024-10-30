@@ -1,12 +1,16 @@
 package com.arslankucukkafa.labormarketauth.idm.role.model;
 
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Permission {
+import java.io.Serializable;
+
+public class Permission implements Serializable {
     private String path;
-    private RequestMethod requestMethod;
+    private String requestMethod;
 
-    public Permission(String path, RequestMethod requestMethod) {
+    @JsonCreator
+    public Permission(@JsonProperty("path") String path, @JsonProperty("requestMethod") String requestMethod) {
         this.path = path;
         this.requestMethod = requestMethod;
     }
@@ -19,11 +23,11 @@ public class Permission {
         this.path = path;
     }
 
-    public RequestMethod getRequestMethod() {
+    public String getRequestMethod() {
         return requestMethod;
     }
 
-    public void setRequestMethod(RequestMethod requestMethod) {
+    public void setRequestMethod(String requestMethod) {
         this.requestMethod = requestMethod;
     }
 }

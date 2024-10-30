@@ -4,23 +4,23 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Document
-public class RoleModel {
+public class RoleModel implements Serializable {
 
     @Id
     private String id;
     @Indexed(unique = true)
     private String name;
     private String description;
-
 /*
     fixme: Burda permission için referans tutsam mı bilemedim. Çünkü endpoint pathleri değişebilir
      . Ama bu durumda sorgu için yapılan repository işlemleri biraz daha karmaşık hale gelebilir.
      Ayrıca SecurityContextHolder dan direk olarak permissionları alınamayan bir yapı oluşur.
 */
-    private List<Permission> permissons;
+    private List<Permission> permissions;
     public String getId() {
         return id;
     }
@@ -38,15 +38,11 @@ public class RoleModel {
     }
 
     public List<Permission> getPermissons() {
-        return permissons;
+        return permissions;
     }
 
-    public void setPermissons(List<Permission> permissons) {
-        this.permissons = permissons;
-    }
-
-    public void addPermissons(Permission permissons) {
-        this.permissons.add(permissons);
+    public void setPermissons(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
     public String getDescription() {

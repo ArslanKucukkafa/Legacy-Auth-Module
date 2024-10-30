@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface ContactRepository extends MongoRepository<ContactModel, String> {
     Optional<ContactModel> findByEmail(String email);
 
+    Optional<ContactModel> findById(String id);
+
     @Query("{ '$or': [ { 'email': ?0 }, { 'phone': ?1 }, { 'github_url': ?2 }, { 'avatar_url': ?3 } ] }")
     Optional<ContactModel> findByContactInfo(String email, String phone, String githubUrl, String avatarUrl);
 }

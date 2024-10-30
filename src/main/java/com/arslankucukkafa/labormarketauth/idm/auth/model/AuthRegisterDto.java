@@ -49,7 +49,7 @@ public class AuthRegisterDto {
         userModel.setVersion(authRegisterDto.getVersion());
         userModel.setRole(new ArrayList<>());
         userModel.setProvider(new ArrayList<>());
-        userModel.getProvider().add(Provider.DAO_PROVIDER);
+        userModel.getProviders().add(Provider.DAO_PROVIDER);
         userModel.setAccountVerified(false);
         return userModel;
     }
